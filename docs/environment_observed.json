@@ -1,0 +1,11 @@
+{
+  "python": "3.12.1",
+  "pytorch": "2.12.0.dev20260407+cu128",
+  "cuda_runtime": "12.8",
+  "numpy": "2.4.3",
+  "rasterio": "1.5.0",
+  "tqdm": "4.67.3",
+  "openpyxl": "3.1.5",
+  "git_lfs_available": true,
+  "hardware_note": "CUDA GPU was available; a B200 was observed in the prior run environment. CPU cgroup memory limit was 8 GB; data loader workers were set to 0."
+}

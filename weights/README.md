@@ -1,0 +1,1 @@
+Place `skysense_model_backbone_s2.pth` here, or set `SKYSENSE_PRETRAIN` to its location. The 1.2 GB pretrained weights are intentionally not committed. See `../docs/data_and_weights.md` for the expected SHA-256 checksum and the separately stored L5 fine-tuned checkpoint.
