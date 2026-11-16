@@ -1,0 +1,41 @@
+{
+  "model_name": "skysense_vitl_lora_all_layers_gated_unet",
+  "input": {
+    "bands": ["B2", "B3", "B4", "B5", "B6", "B7", "B8", "B8A", "B11", "B12"],
+    "patch_size_pixels": 256,
+    "target": "per-pixel mangrove degradation fraction"
+  },
+  "backbone": {
+    "architecture": "SkySense++ ViT-L",
+    "embedding_dimension": 1024,
+    "transformer_blocks": 24,
+    "attention_heads": 16,
+    "patch_size": 4,
+    "mlp_ratio": 4,
+    "feature_block_indices_zero_based": [5, 11, 17, 23],
+    "initialization": "Sentinel-2 pretrained backbone",
+    "base_weights_frozen": true
+  },
+  "adaptation": {
+    "method": "LoRA",
+    "targets": ["attention_qkv", "attention_output", "ffn_first_projection", "ffn_second_projection"],
+    "transformer_blocks": "all 24",
+    "rank": 8,
+    "alpha": 16
+  },
+  "decoder": "progressive gated multiscale U-Net with image-level spectral features",
+  "training": {
+    "seed": 42,
+    "epochs": 60,
+    "batch_size": 4,
+    "amp_bfloat16": true,
+    "attention_backend": "PyTorch SDPA",
+    "activation_checkpointing": false,
+    "data_loader_workers": 0,
+    "train_tiles": 244,
+    "validation_tiles": 52,
+    "test_tiles": 56,
+    "best_epoch": 50,
+    "augmentation": ["Gaussian noise", "edge masking", "random horizontal/vertical flips", "band dropout"]
+  }
+}

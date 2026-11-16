@@ -2,6 +2,7 @@ import torch
 import torch.nn.functional as F
 from standalone_vit import VisionTransformer
 
+
 def _resize_pos_embed(pe, target_shape):
     if pe.ndim != 3 or pe.shape[1] <= 1 or tuple(pe.shape) == tuple(target_shape):
         return pe
@@ -9,13 +10,14 @@ def _resize_pos_embed(pe, target_shape):
     pat = pe[:, 1:, :]
     old_s = int(pat.shape[1] ** 0.5)
     new_tokens = target_shape[1] - 1
-    new_s = int(new_tokens ** 0.5)
+    new_s = int(new_tokens**0.5)
     if old_s * old_s != pat.shape[1] or new_s * new_s != new_tokens:
         return pe
     pat = pat.reshape(1, old_s, old_s, pe.shape[-1]).permute(0, 3, 1, 2)
     pat = F.interpolate(pat, size=(new_s, new_s), mode="bicubic", align_corners=False)
     pat = pat.permute(0, 2, 3, 1).reshape(1, new_s * new_s, pe.shape[-1])
     return torch.cat([cls_tok, pat], dim=1)
+
 
 def _remap_key(k):
     # patch embedding
@@ -29,6 +31,7 @@ def _remap_key(k):
     k = k.replace(".attn.attn.out_proj.weight", ".attn.proj.weight")
     k = k.replace(".attn.attn.out_proj.bias", ".attn.proj.bias")
     return k
+
 
 def build_skysense_backbone(pretrain_path):
     bb = VisionTransformer(
@@ -62,7 +65,9 @@ def build_skysense_backbone(pretrain_path):
             mapped[nk] = v
 
     if "pos_embed" in mapped and "pos_embed" in model_state:
-        mapped["pos_embed"] = _resize_pos_embed(mapped["pos_embed"], model_state["pos_embed"].shape)
+        mapped["pos_embed"] = _resize_pos_embed(
+            mapped["pos_embed"], model_state["pos_embed"].shape
+        )
 
     msg = bb.load_state_dict(mapped, strict=False)
 
