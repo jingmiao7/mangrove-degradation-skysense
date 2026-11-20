@@ -1,6 +1,6 @@
-# Mangrove degradation-fraction model
+# Hurricane Irma mangrove degradation mapping
 
-Reproducible training and inference code for mapping mangrove degradation fraction from 10-band Sentinel-2 imagery.
+This project fine-tunes SkySense++ to map the fraction of mangrove degradation associated with Hurricane Irma from 10-band Sentinel-2 imagery. It includes the model, experiment configuration, exact data splits, and scripts for training and tiled GeoTIFF prediction. The output is a per-pixel degradation fraction between 0 and 1.
 
 ## Model configuration
 
