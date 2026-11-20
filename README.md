@@ -1,6 +1,13 @@
-# Hurricane Irma mangrove degradation mapping
+# Hurricane Irma Mangrove Degradation Mapping (2017–2025)
 
-This project fine-tunes SkySense++ to map the fraction of mangrove degradation associated with Hurricane Irma from 10-band Sentinel-2 imagery. It includes the model, experiment configuration, exact data splits, and scripts for training and tiled GeoTIFF prediction. The output is a per-pixel degradation fraction between 0 and 1.
+This project fine-tunes [SkySense++](https://github.com/kang-wu/SkySensePlusPlus) to map mangrove degradation associated with Hurricane Irma using 10-band Sentinel-2 imagery. It includes the model implementation, experiment configuration, data splits, and scripts for training and tiled GeoTIFF prediction.
+
+| Project | Details |
+| --- | --- |
+| Focus | Mangrove degradation associated with Hurricane Irma (2017) |
+| Mapping period | 2017–2025 |
+| Model | SkySense++ ViT-L with LoRA and a gated U-Net decoder |
+| Prediction | Per-pixel degradation fraction from 0 to 1 |
 
 ## Model configuration
 
@@ -21,7 +28,7 @@ The full recorded run configuration (including split sizes and training settings
 
 ## Reproduction environment
 
-The observed environment is recorded in [`docs/environment_observed.json`](docs/environment_observed.json): Python 3.12.1, PyTorch 2.12.0.dev20260407+cu128, CUDA 12.8. This is a PyTorch nightly build; installing old nightly wheels may require a compatible Python/CUDA image. Do not silently substitute a different build when claiming bitwise reproduction.
+The recorded environment is listed in [`docs/environment_observed.json`](docs/environment_observed.json): Python 3.12.1, PyTorch 2.12.0.dev20260407+cu128, and CUDA 12.8. The PyTorch version is a nightly build, so reproducing the run requires a compatible Python and CUDA environment.
 
 ```bash
 python -m venv .venv
@@ -60,11 +67,11 @@ Inference uses non-overlapping 256 × 256 windows; edge windows are padded then 
 
 - `src/train_model.py`: canonical experiment runner; default is the model described above.
 - `src/predict.py`: tiled GeoTIFF prediction.
-- `src/model_components.py`, `src/standalone_vit.py`, `src/finetune/`: model and backbone implementation.
+- `src/model_components.py`, `src/standalone_vit.py`, `src/finetune/`: model components and the SkySense++ backbone implementation. `standalone_vit.py` is imported by both training and backbone-loading code.
 - `configs/model_configuration.json`: recorded model and run configuration.
 - `configs/splits/`: exact train, validation, and test manifests.
 - `docs/data_and_weights.md`: data and checkpoint locations, checksums, and provenance.
 
 ## Data, weights, and licensing
 
-Training arrays and model weights are intentionally not versioned because of their size and separate redistribution terms. See [`docs/data_and_weights.md`](docs/data_and_weights.md) for expected locations and SHA-256 checksums. No project-level license is assigned yet. Confirm upstream SkySense++ licensing and the rights for all data and checkpoints before making this repository public.
+Training arrays and model weights are intentionally not versioned because of their size and separate redistribution terms. See [`docs/data_and_weights.md`](docs/data_and_weights.md) for expected locations and SHA-256 checksums. No project-level license is assigned yet.
